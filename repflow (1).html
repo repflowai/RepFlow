@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RepFlow AI — Automated Review Generation for Home Service Businesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #E8442A;
+    --dark: #2B2B2B;
+    --cream: #F0EDE6;
+    --white: #FFFFFF;
+    --grey: #6B6B6B;
+    --light: #F7F5F1;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--cream);
+    border-bottom: 2px solid var(--dark);
+    padding: 0 5%;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--dark);
+    text-decoration: none;
+  }
+
+  .nav-logo span {
+    background: var(--red);
+    color: var(--white);
+    padding: 0 4px;
+    margin-right: 2px;
+  }
+
+  .nav-cta {
+    background: var(--red);
+    color: var(--white);
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: 2px solid var(--dark);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-cta:hover {
+    background: var(--dark);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 5% 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 2px solid var(--dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    max-width: 900px;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 .accent {
+    color: var(--red);
+    display: inline-block;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--grey);
+    max-width: 520px;
+    margin-bottom: 48px;
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: var(--white);
+    padding: 16px 36px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 2px solid var(--dark);
+    display: inline-block;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--dark); }
+
+  .btn-secondary {
+    color: var(--dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-secondary::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+
+  .btn-secondary:hover::after { transform: translateX(4px); }
+
+  .hero-stat-row {
+    position: absolute;
+    bottom: 40px;
+    right: 5%;
+    display: flex;
+    gap: 48px;
+  }
+
+  .hero-stat {
+    text-align: right;
+  }
+
+  .hero-stat-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    font-size: 0.75rem;
+    color: var(--grey);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  /* PROBLEM */
+  .problem {
+    padding: 100px 5%;
+    border-bottom: 2px solid var(--dark);
+    background: var(--dark);
+    color: var(--white);
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .problem h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.05;
+    max-width: 800px;
+    margin-bottom: 48px;
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+    margin-top: 64px;
+    border: 2px solid #444;
+  }
+
+  .problem-card {
+    padding: 40px 32px;
+    border-right: 2px solid #444;
+    background: #1E1E1E;
+  }
+
+  .problem-card:last-child { border-right: none; }
+
+  .problem-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .problem-card p {
+    color: #AAAAAA;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .problem-card strong {
+    color: var(--white);
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 100px 5%;
+    border-bottom: 2px solid var(--dark);
+  }
+
+  .how h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.05;
+    max-width: 600px;
+    margin-bottom: 72px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0;
+    border: 2px solid var(--dark);
+  }
+
+  .step {
+    padding: 48px 36px;
+    border-right: 2px solid var(--dark);
+    position: relative;
+  }
+
+  .step:last-child { border-right: none; }
+
+  .step-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 24px;
+  }
+
+  .step h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+
+  .step p {
+    color: var(--grey);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .step-arrow {
+    position: absolute;
+    top: 50%;
+    right: -16px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background: var(--red);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    z-index: 1;
+    border: 2px solid var(--dark);
+  }
+
+  .step:last-child .step-arrow { display: none; }
+
+  /* PRICING */
+  .pricing {
+    padding: 100px 5%;
+    border-bottom: 2px solid var(--dark);
+    background: var(--light);
+  }
+
+  .pricing h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .pricing-sub {
+    color: var(--grey);
+    font-size: 1rem;
+    margin-bottom: 64px;
+    max-width: 480px;
+  }
+
+  .pricing-card {
+    max-width: 520px;
+    border: 2px solid var(--dark);
+    background: var(--white);
+    padding: 48px;
+    position: relative;
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -14px;
+    left: 40px;
+    background: var(--red);
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border: 2px solid var(--dark);
+  }
+
+  .pricing-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 16px;
+  }
+
+  .pricing-price {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .pricing-price sup {
+    font-size: 2rem;
+    vertical-align: top;
+    margin-top: 12px;
+    display: inline-block;
+  }
+
+  .pricing-period {
+    color: var(--grey);
+    font-size: 0.85rem;
+    margin-bottom: 40px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 40px;
+  }
+
+  .pricing-features li {
+    padding: 12px 0;
+    border-bottom: 1px solid #E8E8E8;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--red);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pricing-features li:last-child { border-bottom: none; }
+
+  .pricing-note {
+    font-size: 0.8rem;
+    color: var(--grey);
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #E8E8E8;
+  }
+
+  /* CTA */
+  .cta-section {
+    padding: 120px 5%;
+    background: var(--red);
+    border-bottom: 2px solid var(--dark);
+    text-align: center;
+  }
+
+  .cta-section h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .cta-section p {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    margin-bottom: 48px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn-white {
+    background: var(--white);
+    color: var(--dark);
+    padding: 18px 48px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 2px solid var(--dark);
+    display: inline-block;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-white:hover {
+    background: var(--dark);
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--dark);
+  }
+
+  .footer-logo span {
+    background: var(--red);
+    color: var(--white);
+    padding: 0 3px;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--grey);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-stat-row { display: none; }
+    .step { border-right: none; border-bottom: 2px solid var(--dark); }
+    .step:last-child { border-bottom: none; }
+    .step-arrow { display: none; }
+    .problem-card { border-right: none; border-bottom: 2px solid #444; }
+    .problem-card:last-child { border-bottom: none; }
+    nav { padding: 0 4%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><span>R</span>EPFLOW <span style="background:transparent;color:var(--red);padding:0;">AI</span></a>
+  <a href="mailto:repflowai@gmail.com" class="nav-cta">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">AI-Powered Review Automation</div>
+  <h1>Your Next<br><span class="accent">100 Reviews</span><br>On Autopilot.</h1>
+  <p class="hero-sub">RepFlow AI automatically asks your customers for Google reviews after every job — so you spend zero time chasing them and your rating keeps climbing.</p>
+  <div class="hero-actions">
+    <a href="mailto:repflowai@gmail.com" class="btn-primary">Get a Free Demo</a>
+    <a href="#how" class="btn-secondary">See how it works</a>
+  </div>
+  <div class="hero-stat-row">
+    <div class="hero-stat">
+      <div class="hero-stat-number">85%</div>
+      <div class="hero-stat-label">of customers never<br>leave a review unprompted</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-number">4.7×</div>
+      <div class="hero-stat-label">more reviews with<br>automated follow-up</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="section-label">The Problem</div>
+  <h2>Great Work Deserves<br>Great Reviews.<br>But Nobody Asks.</h2>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="problem-number">85%</div>
+      <strong>Customers forget</strong>
+      <p>Even happy customers don't leave reviews unless someone reminds them at the right moment.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-number">62%</div>
+      <strong>Go to a competitor</strong>
+      <p>When a customer can't reach you or sees a competitor with more reviews, they call them instead.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-number">3.9★</div>
+      <strong>Average HVAC rating</strong>
+      <p>Most home service businesses sit below 4.2 stars — not because of bad work, but because bad experiences get shared and good ones don't.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-label">How It Works</div>
+  <h2>Three Steps.<br>Zero Effort.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-tag">Step 01</div>
+      <h3>Tech Marks Job Complete</h3>
+      <p>After finishing a job, your technician fills a simple form on their phone. Takes 20 seconds — customer name, job type, outcome.</p>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="step">
+      <div class="step-tag">Step 02</div>
+      <h3>AI Sends the Request</h3>
+      <p>RepFlow automatically contacts the customer 3 hours later with a personalized review request. If the job had issues, it alerts you instead — never asking for a review when timing is wrong.</p>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="step">
+      <div class="step-tag">Step 03</div>
+      <h3>Reviews Roll In</h3>
+      <p>Customers click the link and leave their review directly on Google. You get notified. Your rating climbs. You do nothing.</p>
+      <div class="step-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2>Simple.<br>No Surprises.</h2>
+  <p class="pricing-sub">One flat monthly fee. No setup costs. Cancel anytime if you're not seeing results.</p>
+  <div class="pricing-card">
+    <div class="pricing-badge">Most Popular</div>
+    <div class="pricing-name">Review Automation</div>
+    <div class="pricing-price"><sup>$</sup>397</div>
+    <div class="pricing-period">per month — everything included</div>
+    <ul class="pricing-features">
+      <li>Automated review requests after every job</li>
+      <li>Smart job outcome detection — never asks unhappy customers</li>
+      <li>Personalized messages using customer name and job type</li>
+      <li>Automatic 3-day follow-up reminder</li>
+      <li>Weekly review log — see every request sent</li>
+      <li>Owner alert for any flagged or incomplete jobs</li>
+      <li>Full setup and onboarding included</li>
+      <li>Works with your existing workflow — no new software</li>
+    </ul>
+    <a href="mailto:repflowai@gmail.com" class="btn-primary" style="width:100%;text-align:center;">Get Started Today</a>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready to Fill<br>Your Reviews?</h2>
+  <p>We set everything up for you. You'll see it working within 48 hours of signing up.</p>
+  <a href="mailto:repflowai@gmail.com" class="btn-white">Email Us to Get Started</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span>R</span>EPFLOW AI</div>
+  <p>© 2026 RepFlow AI. Built for home service businesses.</p>
+  <p><a href="mailto:repflowai@gmail.com" style="color:var(--grey);">repflowai@gmail.com</a></p>
+</footer>
+
+</body>
+</html>
